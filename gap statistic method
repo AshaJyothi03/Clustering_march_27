@@ -1,0 +1,39 @@
+#gap statistic method
+#it is used in comparing the clusters
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import metrics
+from sklearn.cluster import KMeans
+from sklearn.datasets import make_blobs #for generate clustered data
+from scipy.spatial.distance import cdist
+
+def gap_statistic(x, k_max=10, B=10):
+    from scipy.spatial.distance import cdist
+    import numpy as np
+    gaps = np.zeros(k_max - 1)
+    for k in range(1, k_max):
+        kmeans = KMeans(n_clusters=k, random_state=42)
+        kmeans.fit(x)
+
+        disp = np.mean(np.min(cdist(x, kmeans.cluster_centers_, 'euclidean'), axis=1))
+        ref_disps = np.zeros(B)
+        for i in range(B):
+            x_random = np.random.uniform(np.min(x,axis=0), np.max(x,axis=0), size=x.shape)
+            kmeans_random = KMeans(n_clusters=k, random_state=42)
+            kmeans_random.fit(x_random)
+            ref_disps[i] = np.mean(np.min(cdist(x, kmeans_random.cluster_centers_, 'euclidean'), axis=1))
+
+        gap = np.mean(np.log(ref_disps) - np.log(disp) )
+        gaps[k - 1] = gap
+    return gaps
+
+gaps = gap_statistic(x)
+plt.figure(figsize=(8,5))
+plt.plot(range(1,10), gaps, marker='o',linestyle='--',color='y')
+plt.xlabel('Number of clusters (k)')
+plt.ylabel('Gap Statistic')
+plt.title('Gap Statistic Method')
+plt.show()
