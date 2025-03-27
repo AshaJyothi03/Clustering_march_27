@@ -1,0 +1,31 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn import metrics
+from sklearn.cluster import AgglomerativeClustering
+from sklearn.datasets import make_blobs
+from scipy.cluster.hierarchy import dendrogram, linkage
+
+
+#generate some random data
+from sklearn.datasets import make_blobs
+x,y=make_blobs(n_samples=10,centers=3,random_state=42)
+
+#create a dendogram and plot it
+plt.figure(figsize=(8,5))
+linked=linkage(x,method='ward')
+dendrogram(linked)
+plt.title('dendogram of hierarchy')
+plt.xlabel('datapoints')
+plt.ylabel('distance')
+plt.show()
+
+
+#agglomerative model
+cluser=AgglomerativeClustering(n_clusters=3)
+y_pred=cluser.fit_predict(x)
+plt.scatter(x[:,0],x[:,1],c=y_pred,cmap='rainbow', marker='o')
+plt.title('agglomerative model')
+plt.xlabel('x')
+plt.ylabel('y')
