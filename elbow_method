@@ -1,0 +1,37 @@
+'''
+Choosing the optimal k value(elbow method) 
+--The elbow method helps to find the best no.of clusters by plotting the inertia(cost function) for different values of k
+
+steps:
+
+run k means clusterinf for defferenr values of k(ex: 1 to 10)
+plot the inertia vs k
+look for 'elbow points'. where the inertia starts decreasing slowly.
+'''
+
+#import packages
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+from sklearn.cluster import KMeans
+
+#data collection
+x=np.random.rand(200,2)
+#try differ
+inertia=[]
+k_range=range(1,10)
+for k in k_range:
+  kmeans=KMeans(n_clusters=k,random_state=42)
+  kmeans.fit(x)
+  inertia.append(kmeans.inertia_)
+x
+
+#plot the elbow method
+
+plt.plot(k_range,inertia,marker='o')
+plt.xlabel('no.of cluster')
+plt.ylabel('inertia')
+plt.title("elbow method")
+plt.show()
+
